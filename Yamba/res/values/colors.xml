@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="fog">#cccccccc</color>
+    <color name="white">#ffffff</color>
+    <color name="sky">#dd557799</color>
+    <color name="dirt">#776655</color>
+    <color name="grey">#333333</color>
+
+</resources>

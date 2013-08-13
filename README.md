@@ -1,0 +1,3 @@
+
+Scancom, Accra, Ghana
+
