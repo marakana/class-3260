@@ -25,23 +25,26 @@
             android:text="@string/status_label" />
 
         <TextView
+            android:id="@+id/status_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@id/status_label"
-            android:text="@string/status_count" />
+            android:text="@string/status_count"
+            android:textColor="@color/status_ok" />
 
         <Button
+            android:id="@+id/status_submit"
             style="@style/yambaButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:text="@string/status_submit" 
-            android:background="@drawable/button_background"/>
+            android:text="@string/status_submit" />
     </RelativeLayout>
 
     <EditText
+        android:id="@+id/status_status"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"

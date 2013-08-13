@@ -6,5 +6,8 @@
     <color name="sky">#dd557799</color>
     <color name="dirt">#776655</color>
     <color name="grey">#333333</color>
-
+    <color name="status_ok">#33dd44</color>
+    <color name="status_warn">#ee9900</color>
+    <color name="status_err">#ee2200</color>
+    
 </resources>
