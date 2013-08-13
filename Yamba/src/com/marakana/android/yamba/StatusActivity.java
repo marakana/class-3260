@@ -1,16 +1,60 @@
 
 package com.marakana.android.yamba;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.marakana.android.yamba.clientlib.YambaClient;
+import com.marakana.android.yamba.clientlib.YambaClientException;
 
 
 public class StatusActivity extends Activity {
+    private static final String TAG = "STATUS";
+
+    static class Poster extends AsyncTask<String, Void, Integer> {
+        private final Context ctxt;
+
+        public Poster(Context ctxt) { this.ctxt = ctxt; }
+
+        @Override
+        protected Integer doInBackground(String... status) {
+            YambaClient client = new YambaClient(
+                    "student",
+                    "password",
+                    "http://yamba.marakana.com/api");
+
+            int ret = R.string.post_failed;
+            try {
+                client.postStatus(status[0]);
+                ret = R.string.post_succeeded;
+            }
+            catch (YambaClientException e) {
+                Log.e(TAG, "Post failed", e);
+            }
+
+            return Integer.valueOf(ret);
+        }
+
+        @Override
+        protected void onPostExecute(Integer ret) {
+            Toast.makeText(ctxt, ret.intValue(), Toast.LENGTH_LONG).show();
+            poster = null;
+        }
+    }
+
+    static Poster poster;
+
 
     private int okColor;
     private int warnColor;
@@ -20,6 +64,7 @@ public class StatusActivity extends Activity {
     private int errMax;
     private TextView viewCount;
     private EditText viewStatus;
+    private Button buttonSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,29 +82,54 @@ public class StatusActivity extends Activity {
 
         setContentView(R.layout.activity_status);
 
+        buttonSubmit = (Button) findViewById(R.id.status_submit);
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) { post(); }
+        });
+
         viewCount = (TextView) findViewById(R.id.status_count);
         viewStatus = (EditText) findViewById(R.id.status_status);
         viewStatus.addTextChangedListener(new TextWatcher() {
-
             @Override
             public void afterTextChanged(Editable arg0) { updateCount(); }
 
             @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) { }
+            public void beforeTextChanged(CharSequence str, int s, int c, int a) { }
+
             @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {  }
+            public void onTextChanged(CharSequence str, int s, int c, int a) {  }
         });
     }
 
      void updateCount() {
          int n = maxStatusLen - viewStatus.getText().length();
 
+         buttonSubmit.setEnabled(true);
+
          int c;
          if (n > warnMax) { c = okColor; }
          else if (n > errMax) { c = warnColor; }
-         else { c = errColor; }
+         else {
+             c = errColor;
+             buttonSubmit.setEnabled(false);
+         }
 
          viewCount.setText(String.valueOf(n));
          viewCount.setTextColor(c);
-    }
+     }
+
+     void post() {
+         if (null != poster) { return; }
+
+         String status = viewStatus.getText().toString();
+
+         int n = status.length();
+         if ((0 >= n) || (maxStatusLen < n)) { return; }
+
+         viewStatus.setText("");
+
+         poster = new Poster(getApplicationContext());
+         poster.execute(status);
+     }
 }

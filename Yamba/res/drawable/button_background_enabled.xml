@@ -6,7 +6,7 @@
 
     <gradient
         android:angle="90"
-        android:centerColor="@color/fog"
+        android:centerColor="@color/dirt"
         android:endColor="@color/fog"
         android:startColor="@color/fog"
         android:type="linear" />

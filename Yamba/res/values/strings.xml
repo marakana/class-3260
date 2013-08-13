@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Yamba -->
     <string name="app_name">Yamba</string>
-    <string name="action_settings">Settings</string>
+    
+    <!--  Status Activity -->
     <string name="status_label">Status</string>
     <string name="status_count">140</string>
     <string name="status_hint">What\'s up?</string>
     <string name="status_submit">Submit</string>
+    <string name="post_failed">Post Failed!!</string>
+    <string name="post_succeeded">Succeeded</string>
 
 </resources>
