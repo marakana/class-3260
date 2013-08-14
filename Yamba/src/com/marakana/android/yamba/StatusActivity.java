@@ -1,4 +1,3 @@
-
 package com.marakana.android.yamba;
 
 import android.os.Bundle;
@@ -6,6 +5,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,10 +99,12 @@ public class StatusActivity extends Activity {
     }
 
      void updateCount() {
-         Editable status = viewStatus.getText();
-         buttonSubmit.setEnabled(checkStatusLen(status));
+         int n = viewStatus.getText().length();
 
-         int n = maxStatusLen - status.length();
+         buttonSubmit.setEnabled(checkStatusLen(n));
+
+          n = maxStatusLen - n;
+
          int c;
          if (n > warnMax) { c = okColor; }
          else if (n > errMax) { c = warnColor; }
@@ -113,10 +115,12 @@ public class StatusActivity extends Activity {
      }
 
      void post() {
-         //if (null != poster) { return; }
+//         if (null != poster) { return; }
 
-         Editable status = viewStatus.getText();
-         if (!checkStatusLen(status)) { return; }
+         String status = viewStatus.getText().toString();
+         if (BuildConfig.DEBUG) { Log.d(TAG, "Posting: " + status); }
+
+         if (!checkStatusLen(status.length())) { return; }
 
          viewStatus.setText("");
 
@@ -125,8 +129,7 @@ public class StatusActivity extends Activity {
 //         poster.execute(status.toString());
      }
 
-    private boolean checkStatusLen(Editable status) {
-        int n = status.length();
-        return (0 < n) && (maxStatusLen >= n);
-    }
+     private boolean checkStatusLen(int n) {
+         return (0 < n) && (maxStatusLen >= n);
+     }
 }
