@@ -99,17 +99,14 @@ public class StatusActivity extends Activity {
     }
 
      void updateCount() {
-         int n = maxStatusLen - viewStatus.getText().length();
+         Editable status = viewStatus.getText();
+         buttonSubmit.setEnabled(checkStatusLen(status));
 
-         buttonSubmit.setEnabled(true);
-
+         int n = maxStatusLen - status.length();
          int c;
          if (n > warnMax) { c = okColor; }
          else if (n > errMax) { c = warnColor; }
-         else {
-             c = errColor;
-             buttonSubmit.setEnabled(false);
-         }
+         else { c = errColor; }
 
          viewCount.setText(String.valueOf(n));
          viewCount.setTextColor(c);
@@ -118,16 +115,18 @@ public class StatusActivity extends Activity {
      void post() {
          //if (null != poster) { return; }
 
-         String status = viewStatus.getText().toString();
-
-         int n = status.length();
-         if ((0 >= n) || (maxStatusLen < n)) { return; }
+         Editable status = viewStatus.getText();
+         if (!checkStatusLen(status)) { return; }
 
          viewStatus.setText("");
 
-         YambaService.post(this, status);
-
+         YambaService.post(this, status.toString());
 //         poster = new Poster(getApplicationContext());
-//         poster.execute(status);
+//         poster.execute(status.toString());
      }
+
+    private boolean checkStatusLen(Editable status) {
+        int n = status.length();
+        return (0 < n) && (maxStatusLen >= n);
+    }
 }
