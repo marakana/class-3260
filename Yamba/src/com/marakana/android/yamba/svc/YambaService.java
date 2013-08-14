@@ -5,8 +5,10 @@ import java.util.List;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -17,6 +19,7 @@ import com.marakana.android.yamba.R;
 import com.marakana.android.yamba.clientlib.YambaClient;
 import com.marakana.android.yamba.clientlib.YambaClient.Status;
 import com.marakana.android.yamba.clientlib.YambaClientException;
+import com.marakana.android.yamba.data.YambaDBHelper;
 
 
 public class YambaService extends IntentService {
@@ -78,6 +81,7 @@ public class YambaService extends IntentService {
 
     private volatile Hdlr hdlr;
     private volatile int maxPolls;
+    private volatile YambaDBHelper dbHelper;
     private volatile YambaClient client;
 
     public YambaService() { super(TAG); }
@@ -86,6 +90,7 @@ public class YambaService extends IntentService {
     public void onCreate() {
         super.onCreate();
         hdlr = new Hdlr(this);
+        dbHelper = new YambaDBHelper(this);
         maxPolls = getResources().getInteger(R.integer.poll_max);
         client = new YambaClient(
                 "student",
@@ -125,6 +130,7 @@ public class YambaService extends IntentService {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Post complete: " + (R.string.post_succeeded == ret));
         }
+
         Message.obtain(hdlr, OP_POST_COMPLETE, ret, 0).sendToTarget();
     }
 
@@ -142,8 +148,16 @@ public class YambaService extends IntentService {
     }
 
     private void processTimeline(List<Status> timeline) {
+        if (timeline.isEmpty()) { return; }
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         for (Status status: timeline) {
-            Log.i(TAG, "status: " + status.getMessage());
+            ContentValues row = new ContentValues();
+            row.put(YambaDBHelper.COL_ID, Long.valueOf(status.getId()));
+            row.put(YambaDBHelper.COL_TIMESTAMP, Long.valueOf(status.getCreatedAt().getTime()));
+            row.put(YambaDBHelper.COL_USER, status.getUser());
+            row.put(YambaDBHelper.COL_STATUS, status.getMessage());
+             db.insert(YambaDBHelper.TABLE, null, row);
         }
     }
 }

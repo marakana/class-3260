@@ -124,7 +124,7 @@ public class StatusActivity extends Activity {
 
          viewStatus.setText("");
 
-         YambaService.post(this, status.toString());
+         YambaService.post(this, status);
 //         poster = new Poster(getApplicationContext());
 //         poster.execute(status.toString());
      }
