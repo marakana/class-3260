@@ -1,59 +1,55 @@
 
 package com.marakana.android.yamba;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.marakana.android.yamba.clientlib.YambaClient;
-import com.marakana.android.yamba.clientlib.YambaClientException;
+import com.marakana.android.yamba.svc.YambaService;
 
 
 public class StatusActivity extends Activity {
     private static final String TAG = "STATUS";
 
-    static class Poster extends AsyncTask<String, Void, Integer> {
-        private final Context ctxt;
-
-        public Poster(Context ctxt) { this.ctxt = ctxt; }
-
-        @Override
-        protected Integer doInBackground(String... status) {
-            YambaClient client = new YambaClient(
-                    "student",
-                    "password",
-                    "http://yamba.marakana.com/api");
-
-            int ret = R.string.post_failed;
-            try {
-                client.postStatus(status[0]);
-                ret = R.string.post_succeeded;
-            }
-            catch (YambaClientException e) {
-                Log.e(TAG, "Post failed", e);
-            }
-
-            return Integer.valueOf(ret);
-        }
-
-        @Override
-        protected void onPostExecute(Integer ret) {
-            Toast.makeText(ctxt, ret.intValue(), Toast.LENGTH_LONG).show();
-            poster = null;
-        }
-    }
-
-    static Poster poster;
+//     class Poster extends AsyncTask<String, Void, Integer> {
+//        private final Context ctxt;
+//
+//        public Poster(Context ctxt) { this.ctxt = ctxt; }
+//
+//        // Runs on daemon thread
+//        @Override
+//        protected Integer doInBackground(String... status) {
+//            YambaClient client = new YambaClient(
+//                    "student",
+//                    "password",
+//                    "http://yamba.marakana.com/api");
+//
+//            int ret = R.string.post_failed;
+//            try {
+//                client.postStatus(status[0]);
+//                ret = R.string.post_succeeded;
+//            }
+//            catch (YambaClientException e) {
+//                Log.e(TAG, "Post failed", e);
+//            }
+//
+//            return Integer.valueOf(ret);
+//        }
+//
+//        // Runs on UI thread
+//        @Override
+//        protected void onPostExecute(Integer ret) {
+//            Toast.makeText(ctxt, ret.intValue(), Toast.LENGTH_LONG).show();
+//           poster = null;
+//        }
+//    }
+//
+//    static Poster poster;
 
 
     private int okColor;
@@ -120,7 +116,7 @@ public class StatusActivity extends Activity {
      }
 
      void post() {
-         if (null != poster) { return; }
+         //if (null != poster) { return; }
 
          String status = viewStatus.getText().toString();
 
@@ -129,7 +125,9 @@ public class StatusActivity extends Activity {
 
          viewStatus.setText("");
 
-         poster = new Poster(getApplicationContext());
-         poster.execute(status);
+         YambaService.post(this, status);
+
+//         poster = new Poster(getApplicationContext());
+//         poster.execute(status);
      }
 }
