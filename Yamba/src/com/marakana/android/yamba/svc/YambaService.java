@@ -177,6 +177,8 @@ public class YambaService extends IntentService {
     private int processTimeline(List<Status> timeline) {
         if ((null == timeline) || timeline.isEmpty()) { return 0; }
 
+        // only insert records with timestamps newer than
+        // the newest timestamp in the database.
         long latest = getMaxTimestamp();
         List<ContentValues> vals = new ArrayList<ContentValues>();
         for (Status status: timeline) {
@@ -193,12 +195,16 @@ public class YambaService extends IntentService {
             vals.add(row);
         }
 
+        // transactions are expensive in SQLite!!!
+        // use bulkInsert instead of inserting each row
+        // individually, to minimize the number of transactions.
         return getContentResolver().bulkInsert(
                 YambaContract.Timeline.URI,
                 vals.toArray(new ContentValues[vals.size()]));
     }
 
     // find the timestamp on the newest record in the db
+    // select max(createdAt) from timestamp;
     private long getMaxTimestamp() {
         Cursor c = null;
         long mx = Long.MIN_VALUE;
