@@ -16,6 +16,9 @@ import com.marakana.android.yamba.svc.YambaService;
 public class StatusActivity extends Activity {
     private static final String TAG = "STATUS";
 
+// Async task implementation of Post.
+// This is better done with a Service
+//
 //     class Poster extends AsyncTask<String, Void, Integer> {
 //        private final Context ctxt;
 //
@@ -52,12 +55,12 @@ public class StatusActivity extends Activity {
 //    static Poster poster;
 
 
-    private int okColor;
-    private int warnColor;
-    private int errColor;
     private int maxStatusLen;
     private int warnMax;
     private int errMax;
+    private int okColor;
+    private int warnColor;
+    private int errColor;
     private TextView viewCount;
     private EditText viewStatus;
     private Button buttonSubmit;
@@ -68,23 +71,31 @@ public class StatusActivity extends Activity {
 
         Resources rez = getResources();
 
-        okColor = rez.getColor(R.color.status_ok);
-        warnColor = rez.getColor(R.color.status_warn);
-        errColor = rez.getColor(R.color.status_err);
-
+        // use resources for configurable parameters
+        // integer resources are not well documented but do exist
         maxStatusLen = rez.getInteger(R.integer.status_max_len);
         warnMax = rez.getInteger(R.integer.warn_max);
         errMax = rez.getInteger(R.integer.err_max);
 
+        // get the colors from resources
+        okColor = rez.getColor(R.color.status_ok);
+        warnColor = rez.getColor(R.color.status_warn);
+        errColor = rez.getColor(R.color.status_err);
+
         setContentView(R.layout.activity_status);
 
+        // wire up the button so that the post()
+        // method is called, when it is pushed
         buttonSubmit = (Button) findViewById(R.id.status_submit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) { post(); }
         });
 
+        // cache a pointer to the view containing the character count
         viewCount = (TextView) findViewById(R.id.status_count);
+
+        // each keystroke in the EditText box will call updateCount()
         viewStatus = (EditText) findViewById(R.id.status_status);
         viewStatus.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,38 +109,49 @@ public class StatusActivity extends Activity {
         });
     }
 
-     void updateCount() {
-         int n = viewStatus.getText().length();
+    // on each keystroke:
+    //    - enable the submit button if there is a legal message
+    //    - set the count to be the number of chars remaining
+    //      in a legal message
+    //    - set the color of the count text to warn if message
+    //      is nearing the max length.
+    void updateCount() {
+        int n = viewStatus.getText().length();
 
-         buttonSubmit.setEnabled(checkStatusLen(n));
+        buttonSubmit.setEnabled(checkStatusLen(n));
 
-          n = maxStatusLen - n;
+        n = maxStatusLen - n;
 
-         int c;
-         if (n > warnMax) { c = okColor; }
-         else if (n > errMax) { c = warnColor; }
-         else { c = errColor; }
+        int c;
+        if (n > warnMax) { c = okColor; }
+        else if (n > errMax) { c = warnColor; }
+        else { c = errColor; }
 
-         viewCount.setText(String.valueOf(n));
-         viewCount.setTextColor(c);
-     }
+        viewCount.setText(String.valueOf(n));
+        viewCount.setTextColor(c);
+    }
 
-     void post() {
-//         if (null != poster) { return; }
+    // post a message to the Yamba server.
+    // note that the actual post MUST NOT happen on
+    // the UI thread.  An AsyncTask is one way to get it off.
+    // another, preferred, way, uses an IntentService.
+    void post() {
+        //         if (null != poster) { return; }
 
-         String status = viewStatus.getText().toString();
-         if (BuildConfig.DEBUG) { Log.d(TAG, "Posting: " + status); }
+        String status = viewStatus.getText().toString();
+        if (BuildConfig.DEBUG) { Log.d(TAG, "Posting: " + status); }
 
-         if (!checkStatusLen(status.length())) { return; }
+        if (!checkStatusLen(status.length())) { return; }
 
-         viewStatus.setText("");
+        viewStatus.setText("");
 
-         YambaService.post(this, status);
-//         poster = new Poster(getApplicationContext());
-//         poster.execute(status.toString());
-     }
+        // let the service handle the post
+        YambaService.post(this, status);
+        //         poster = new Poster(getApplicationContext());
+        //         poster.execute(status.toString());
+    }
 
-     private boolean checkStatusLen(int n) {
-         return (0 < n) && (maxStatusLen >= n);
-     }
+    private boolean checkStatusLen(int n) {
+        return (0 < n) && (maxStatusLen >= n);
+    }
 }
