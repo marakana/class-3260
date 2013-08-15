@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 // TO USE:
 // 1) create an instance of this object in Activity.onCreate
@@ -46,6 +47,7 @@ public class YambaStatusBarManager {
     }
 
     public void init() {
+        ctxt.getActionBar().setHomeButtonEnabled(true);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,6 +62,14 @@ public class YambaStatusBarManager {
                 nextPage(StatusActivity.class);
                 break;
 
+            case R.id.menu_timeline:
+                nextPage(TimelineActivity.class);
+                break;
+
+            case android.R.id.home:
+                Toast.makeText(ctxt, R.string.about, Toast.LENGTH_LONG).show();
+                break;
+
             default:
                 return false;
         }
@@ -72,5 +82,4 @@ public class YambaStatusBarManager {
         i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         ctxt.startActivity(i);
     }
-
 }
