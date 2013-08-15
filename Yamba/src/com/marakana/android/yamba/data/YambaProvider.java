@@ -82,6 +82,16 @@ public class YambaProvider extends ContentProvider {
         }
     }
 
+
+    // "id = 7; drop table timeline;"
+    // "id = ?1",  "7"
+
+
+    // select <columns>   -- projection
+    //     from <table>   -- table
+    //     where <selection>  <selargs>  -- restriction
+    //     order by <sort cols>  --- sort
+
     @Override
     public Cursor query(Uri uri, String[] proj, String sel, String[] selArgs, String sort) {
         long pk = -1;

@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -61,9 +63,22 @@ public class StatusActivity extends Activity {
     private int okColor;
     private int warnColor;
     private int errColor;
+    private YambaStatusBarManager menuMgr;
     private TextView viewCount;
     private EditText viewStatus;
     private Button buttonSubmit;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return menuMgr.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return  (menuMgr.onOptionsItemSelected(item))
+                ? true
+                : super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +96,9 @@ public class StatusActivity extends Activity {
         okColor = rez.getColor(R.color.status_ok);
         warnColor = rez.getColor(R.color.status_warn);
         errColor = rez.getColor(R.color.status_err);
+
+        menuMgr = new YambaStatusBarManager(this);
+        menuMgr.init();
 
         setContentView(R.layout.activity_status);
 
