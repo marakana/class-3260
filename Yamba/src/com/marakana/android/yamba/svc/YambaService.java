@@ -81,7 +81,8 @@ public class YambaService extends IntentService {
     public static void stopPoller(Context ctxt) {
         ((AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE))
             .cancel(getPollingIntent(ctxt));
-    }
+        if (BuildConfig.DEBUG) { Log.d(TAG, "Polling stopped"); }
+   }
 
     // this is the pending intent that the alarm manager will
     // send us.  it will be received on the daemon thread,

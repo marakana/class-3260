@@ -154,7 +154,7 @@ public class StatusActivity extends Activity {
     // the UI thread.  An AsyncTask is one way to get it off.
     // another, preferred, way, uses an IntentService.
     void post() {
-        //         if (null != poster) { return; }
+//         if (null != poster) { return; }
 
         String status = viewStatus.getText().toString();
         if (BuildConfig.DEBUG) { Log.d(TAG, "Posting: " + status); }
@@ -165,8 +165,8 @@ public class StatusActivity extends Activity {
 
         // let the service handle the post
         YambaService.post(this, status);
-        //         poster = new Poster(getApplicationContext());
-        //         poster.execute(status.toString());
+//         poster = new Poster(getApplicationContext());
+//         poster.execute(status.toString());
     }
 
     private boolean checkStatusLen(int n) {

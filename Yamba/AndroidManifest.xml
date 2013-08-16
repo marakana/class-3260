@@ -13,6 +13,18 @@
     must ask for permission to do so.
     -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <permission
+        android:name="com.marakana.android.yamba.TIMELINE_READ"
+        android:description="@string/permission_desc_read"
+        android:label="@string/permission_label_read"
+        android:protectionLevel="normal" />
+    <permission
+        android:name="com.marakana.android.yamba.TIMELINE_WRITE"
+        android:description="@string/permission_desc_write"
+        android:label="@string/permission_label_write"
+        android:protectionLevel="signature" />
 
     <!--
     Every application has an application object.
@@ -50,7 +62,17 @@
         <provider
             android:name=".data.YambaProvider"
             android:authorities="com.marakana.android.yamba"
-            android:exported="false" />
+            android:readPermission="com.marakana.android.yamba.TIMELINE_READ"
+            android:writePermission="com.marakana.android.yamba.TIMELINE_WRITE" />
+
+        <!--
+        Start polling immediately, when Android boots
+        -->
+        <receiver android:name=".svc.YambaReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

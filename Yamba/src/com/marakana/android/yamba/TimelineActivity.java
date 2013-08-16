@@ -22,16 +22,16 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-import com.marakana.android.yamba.svc.YambaService;
-
 
 public class TimelineActivity extends ListActivity implements LoaderCallbacks<Cursor>{
+    private static final String TAG = "TIMELINE";
 
     private static final int TIMELINE_LOADER = 666;
 
@@ -81,6 +81,7 @@ public class TimelineActivity extends ListActivity implements LoaderCallbacks<Cu
 
     @Override
     public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
+        if (BuildConfig.DEBUG) { Log.d(TAG, "Create loader"); }
         return new CursorLoader(
                 this,
                 YambaContract.Timeline.URI,
@@ -92,11 +93,13 @@ public class TimelineActivity extends ListActivity implements LoaderCallbacks<Cu
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cur) {
+        if (BuildConfig.DEBUG) { Log.d(TAG, "New cursor: " + cur); }
         ((SimpleCursorAdapter) getListAdapter()).swapCursor(cur);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
+        if (BuildConfig.DEBUG) { Log.d(TAG, "Reset cursor"); }
         ((SimpleCursorAdapter) getListAdapter()).swapCursor(null);
     }
 
@@ -126,12 +129,12 @@ public class TimelineActivity extends ListActivity implements LoaderCallbacks<Cu
     @Override
     protected void onPause() {
         super.onPause();
-        YambaService.stopPoller(this);
+        //YambaService.stopPoller(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        YambaService.startPoller(this);
+        //YambaService.startPoller(this);
     }
 }

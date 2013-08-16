@@ -5,6 +5,10 @@
     <string name="app_name">Yamba</string>
     <string name="menu_about">About</string>
     <string name="about">Yamba!\n    From the Accra Scancom Team</string>
+    <string name="permission_label_read">Timeline Read</string>
+    <string name="permission_desc_read">Permission to read the Yamba timeline cache</string>
+    <string name="permission_label_write">Timeline Write</string>
+    <string name="permission_desc_write">Permission to write the Yamba timeline cache</string>
 
     <!-- Status Activity -->
     <string name="status_label">Status</string>

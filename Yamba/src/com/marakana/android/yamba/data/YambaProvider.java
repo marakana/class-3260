@@ -119,6 +119,8 @@ public class YambaProvider extends ContentProvider {
 
         Cursor c = qb.query(getDb(), proj, sel, selArgs, null, null, sort);
 
+        // register the cursor for notification
+        // when the data backing this url changes
         c.setNotificationUri(getContext().getContentResolver(), uri);
 
         return c;
@@ -151,6 +153,8 @@ public class YambaProvider extends ContentProvider {
             sdb.endTransaction();
         }
 
+        // Notify all listeners (including the cursor in the
+        // query above) that the data set has changed.
         if (0 < count) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
