@@ -18,6 +18,12 @@ public final class YambaContract {
         .authority(AUTHORITY)
         .build();
 
+    // timeline update notifications
+    public static final String BROADCAST_TIMELINE_UPDATE
+        = "com.marakana.android.yamba.action.NEW_STATUS";
+    public static final String TIMELINE_UPDATE_COUNT
+        = "com.marakana.android.yamba.action.NEW_STATUS_COUNT";
+
     public static final class Timeline {
         private Timeline() { }
 

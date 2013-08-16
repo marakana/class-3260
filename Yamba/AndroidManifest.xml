@@ -14,7 +14,13 @@
     -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="com.marakana.android.yamba.TIMELINE_NOTIFICATION" />
 
+    <permission
+        android:name="com.marakana.android.yamba.TIMELINE_NOTIFICATION"
+        android:description="@string/permission_desc_notify"
+        android:label="@string/permission_label_notify"
+        android:protectionLevel="dangerous" />
     <permission
         android:name="com.marakana.android.yamba.TIMELINE_READ"
         android:description="@string/permission_desc_read"
@@ -65,10 +71,14 @@
             android:readPermission="com.marakana.android.yamba.TIMELINE_READ"
             android:writePermission="com.marakana.android.yamba.TIMELINE_WRITE" />
 
-        <!--
-        Start polling immediately, when Android boots
-        -->
-        <receiver android:name=".svc.YambaReceiver" >
+        <receiver android:name=".svc.TimelineReceiver" >
+            <intent-filter>
+                <action android:name="com.marakana.android.yamba.action.NEW_STATUS" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Start polling immediately, when Android boots -->
+        <receiver android:name=".svc.BootReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

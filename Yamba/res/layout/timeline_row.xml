@@ -3,13 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:contentDescription="@string/thumbnail"
+        android:src="@drawable/default_thumbnail" />
+
     <TextView
         android:id="@+id/timeline_user"
         style="@style/yambaText.Med"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/icon" />
 
     <TextView
         android:id="@+id/timeline_time"
@@ -25,6 +33,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/timeline_user"
-        android:textStyle="italic"/>
+        android:textStyle="italic" />
 
 </RelativeLayout>

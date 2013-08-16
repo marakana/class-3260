@@ -10,9 +10,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".TimelineActivity" >
 
-    <ListView
-        android:id="@android:id/list"
+    <fragment
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        class="com.marakana.android.yamba.TimelineFragment"
+        android:tag="@string/timeline_fragment" />
 
 </FrameLayout>

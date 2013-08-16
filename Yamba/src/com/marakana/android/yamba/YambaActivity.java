@@ -17,6 +17,7 @@ package com.marakana.android.yamba;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -39,22 +40,21 @@ import android.widget.Toast;
 //            : super.onOptionsItemSelected(item);
 //}
 
-public class YambaStatusBarManager {
-    private final Activity ctxt;
+public abstract class YambaActivity extends Activity{
 
-    public YambaStatusBarManager(Activity ctxt) {
-        this.ctxt = ctxt;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getActionBar().setHomeButtonEnabled(true);
     }
 
-    public void init() {
-        ctxt.getActionBar().setHomeButtonEnabled(true);
-    }
-
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        ctxt.getMenuInflater().inflate(R.menu.yamba, menu);
+        getMenuInflater().inflate(R.menu.yamba, menu);
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
 
@@ -67,7 +67,7 @@ public class YambaStatusBarManager {
                 break;
 
             case android.R.id.home:
-                Toast.makeText(ctxt, R.string.about, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.about, Toast.LENGTH_LONG).show();
                 break;
 
             default:
@@ -78,8 +78,8 @@ public class YambaStatusBarManager {
     }
 
     private void nextPage(Class<?> klass) {
-        Intent i = new Intent(ctxt, klass);
+        Intent i = new Intent(this, klass);
         i.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        ctxt.startActivity(i);
+        startActivity(i);
     }
 }

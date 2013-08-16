@@ -70,7 +70,7 @@ public class YambaService extends IntentService {
     public static void startPoller(Context ctxt) {
         long t = 1000 * 60 * ctxt.getResources().getInteger(R.integer.poll_interval);
         ((AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE))
-            .setInexactRepeating(
+        .setInexactRepeating(
                 AlarmManager.RTC,
                 System.currentTimeMillis() + 100,
                 t,
@@ -80,9 +80,9 @@ public class YambaService extends IntentService {
 
     public static void stopPoller(Context ctxt) {
         ((AlarmManager) ctxt.getSystemService(Context.ALARM_SERVICE))
-            .cancel(getPollingIntent(ctxt));
+        .cancel(getPollingIntent(ctxt));
         if (BuildConfig.DEBUG) { Log.d(TAG, "Polling stopped"); }
-   }
+    }
 
     // this is the pending intent that the alarm manager will
     // send us.  it will be received on the daemon thread,
@@ -141,7 +141,7 @@ public class YambaService extends IntentService {
                 break;
 
             default:
-                 Log.w(TAG, "Unrecognized op ignored: " + op);
+                Log.w(TAG, "Unrecognized op ignored: " + op);
         }
     }
 
@@ -176,7 +176,14 @@ public class YambaService extends IntentService {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, "Poll complete: " + ((null == timeline) ? -1 : timeline.size()));
         }
-        processTimeline(timeline);
+
+        int ins = processTimeline(timeline);
+        if (BuildConfig.DEBUG) { Log.d(TAG, "Inserted: " + ins); }
+        if (0 < ins) {
+            Intent i = new Intent(YambaContract.BROADCAST_TIMELINE_UPDATE);
+            i.putExtra(YambaContract.TIMELINE_UPDATE_COUNT, ins);
+            sendBroadcast(i);
+        }
     }
 
     // insert new timeline data into the database

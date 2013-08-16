@@ -27,7 +27,7 @@
     </style>
 
     <style name="yambaText.Med">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="yambaButton" parent="android:Widget.Holo.Light.Button">
